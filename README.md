@@ -221,7 +221,7 @@ mv /var/www/modul-3 /var/www/granz.channel.i06.com
 
 Configurate `nginx`
 ```
-cp /etc/nginx/sites-available/default /etc/nginx/sites-available/granz.channel.b05.com
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/granz.channel.i06.com
 ln -s /etc/nginx/sites-available/granz.channel.i06.com /etc/nginx/sites-enabled/
 rm /etc/nginx/sites-enabled/default
 
@@ -248,3 +248,102 @@ service nginx restart
 ```
 ### Result
 
+## Question 7
+Kepala suku dari Bredt Region memberikan resource server sebagai berikut: Lawine, 4GB, 2vCPU, dan 80 GB SSD. Linie, 2GB, 2vCPU, dan 50 GB SSD. Lugner 1GB, 1vCPU, dan 25 GB SSD. Aturlah agar Eisen dapat bekerja dengan maksimal, lalu lakukan testing dengan 1000 request dan 100 request/second. (7)
+
+Configure `Load Balancing` on the `Eisen` node as follows.
+Reopen the DNS Server Node and point the domain to the IP `Load Balancer Eise`
+
+### Script
+```
+echo ';
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     riegel.canyon.i06.com. root.riegel.canyon.i06.com. (
+                        2023111401      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      riegel.canyon.i06.com.
+@       IN      A       10.11.2.2     ; IP LB Eiken
+www     IN      CNAME   riegel.canyon.i06.com.' > /etc/bind/sites/riegel.canyon.i06.com
+
+echo '
+; BIND data file for local loopback interface
+;
+$TTL    604800
+@       IN      SOA     granz.channel.i06.com. root.granz.channel.i06.com. (
+                        2023111401      ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         604800 )       ; Negative Cache TTL
+;
+@       IN      NS      granz.channel.i06.com.
+@       IN      A       10.11.2.2     ; IP LB Eiken
+www     IN      CNAME   granz.channel.i06.com.' > /etc/bind/sites/granz.channel.i06.com
+```
+Then return to the Eisen node and configure nginx as follows
+```
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
+
+echo ' upstream worker {
+    server 10.11.3.1;
+    server 10.11.3.2;
+    server 10.11.3.3;
+}
+
+server {
+    listen 80;
+    server_name granz.channel.i06.com www.granz.channel.i06.com;
+
+    root /var/www/html;
+
+    index index.html index.htm index.nginx-debian.html;
+
+    server_name _;
+
+    location / {
+        proxy_pass http://worker;
+    }
+} ' > /etc/nginx/sites-available/lb_php
+
+ln -s /etc/nginx/sites-available/lb_php /etc/nginx/sites-enabled/
+rm /etc/nginx/sites-enabled/default
+
+service nginx restart
+```
+After setup, run the following command on the Revolte client
+
+```
+ab -n 1000 -c 100 http://www.granz.channel.i06.com/
+```
+
+### Hasil
+
+
+## NO 8
+Karena diminta untuk menuliskan grimoire, buatlah analisis hasil testing dengan 200 request dan 10 request/second masing-masing algoritma Load Balancer dengan ketentuan sebagai berikut: 1. Nama Algoritma Load Balancer; 2. Report hasil testing pada Apache Benchmark; 3.Grafik request per second untuk masing masing algoritma.
+
+### Script
+Run the following command on the Revolte client
+```
+ab -n 200 -c 10 http://www.granz.channel.i06.com/ 
+```
+
+### Hasil
+
+
+## NO 9
+Dengan menggunakan algoritma Round Robin, lakukan testing dengan menggunakan 3 worker, 2 worker, dan 1 worker sebanyak 100 request dengan 10 request/second, kemudian tambahkan grafiknya pada grimoire.
+
+### Script
+Run the following command on the Revolte client
+```
+ab -n 100 -c 10 http://www.granz.channel.i06.com/ 
+```
+
+### Hasil
