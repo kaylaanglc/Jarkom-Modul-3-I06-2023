@@ -268,7 +268,7 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @       IN      NS      riegel.canyon.i06.com.
-@       IN      A       10.11.2.2     ; IP LB Eiken
+@       IN      A       192.231.2.2    ; IP LB Eiken
 www     IN      CNAME   riegel.canyon.i06.com.' > /etc/bind/sites/riegel.canyon.i06.com
 
 echo '
@@ -283,7 +283,7 @@ $TTL    604800
                          604800 )       ; Negative Cache TTL
 ;
 @       IN      NS      granz.channel.i06.com.
-@       IN      A       10.11.2.2     ; IP LB Eiken
+@       IN      A       192.231.2.2    ; IP LB Eiken
 www     IN      CNAME   granz.channel.i06.com.' > /etc/bind/sites/granz.channel.i06.com
 ```
 Then return to the Eisen node and configure nginx as follows
@@ -291,9 +291,9 @@ Then return to the Eisen node and configure nginx as follows
 cp /etc/nginx/sites-available/default /etc/nginx/sites-available/lb_php
 
 echo ' upstream worker {
-    server 10.11.3.1;
-    server 10.11.3.2;
-    server 10.11.3.3;
+    server 192.231.3.1;
+    server 192.231.3.2;
+    server 192.231.3.3;
 }
 
 server {
