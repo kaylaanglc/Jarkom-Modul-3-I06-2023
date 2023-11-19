@@ -247,6 +247,7 @@ echo 'server {
 service nginx restart
 ```
 ### Result
+<img width="601" alt="Screenshot 2023-11-19 at 21 33 13" src="https://github.com/kaylaanglc/Jarkom-Modul-3-I06-2023/assets/91369024/a1d2e08e-dbbb-4fe6-9c97-90e3c42b0897">
 
 ## Question 7
 Kepala suku dari Bredt Region memberikan resource server sebagai berikut: Lawine, 4GB, 2vCPU, dan 80 GB SSD. Linie, 2GB, 2vCPU, dan 50 GB SSD. Lugner 1GB, 1vCPU, dan 25 GB SSD. Aturlah agar Eisen dapat bekerja dengan maksimal, lalu lakukan testing dengan 1000 request dan 100 request/second. (7)
